@@ -4,7 +4,7 @@ import App from '../App';
 import TimeCard from '../TimeCard';
 import Contact from '../Contact';
 import LoginPage from '../LoginPage';
-
+import Employee from '../Employee';
 
 export default function AppRouter() {
 
@@ -29,6 +29,8 @@ export default function AppRouter() {
                     <Route path="/time" element={<TimeCard />} onEnter={requireAuth} >
                     </Route>
                     <Route path="/contact" element={<Contact />} onEnter={requireAuth} >
+                    </Route>
+                    <Route path="/employee" element={<Employee />} onEnter={requireAuth} >
                     </Route>
                 </Routes>
             </BrowserRouter>

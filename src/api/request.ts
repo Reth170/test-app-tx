@@ -9,7 +9,34 @@ axios.defaults.baseURL = BASE_URL;
 // Content-Type 响应头
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
 
+axios.interceptors.request.use(config => {
+  const sessionId = localStorage.getItem('JSESSIONID');
+  if (sessionId) {
+    config.headers['Cookie'] = `JSESSIONID=${sessionId}`;
+  }
+  return config;
+});
 // 响应拦截器
+
+axios.interceptors.response.use(response => {
+  // 保存 session ID
+  const setCookieHeader = response.headers['set-cookie'];
+  if (setCookieHeader) {
+    const sessionCookie = setCookieHeader.find(cookie => 
+      cookie.includes('JSESSIONID')
+    );
+    
+    if (sessionCookie) {
+      const sessionId = sessionCookie.split(';')[0].split('=')[1];
+      localStorage.setItem('JSESSIONID', sessionId);
+    }
+  }
+  
+  return response;
+}, error => {
+  return Promise.reject(error);
+});
+
 axios.interceptors.response.use(
   (response) => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
